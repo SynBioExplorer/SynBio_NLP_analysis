@@ -1,0 +1,9 @@
+# macOS and Jupyter housekeeping
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+
+# Database exports used as notebook inputs, and the spreadsheet the notebook writes.
+# Keep licensed records out of the repository.
+*.xlsx
+scopus.csv

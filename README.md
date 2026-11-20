@@ -125,3 +125,7 @@ The search strings for the two exports are not recorded here. Text from the expo
 ## History
 
 An earlier version of the notebook (March 2023, 14,854 abstracts) was deleted from this repository in June 2023 and remains in the Git history. A copy of it is also in [Navigating-the-frontier-of-Synthetic-Biology-An-AI-driven-platform-for-exploring-research-trends-an](https://github.com/SynBioExplorer/Navigating-the-frontier-of-Synthetic-Biology-An-AI-driven-platform-for-exploring-research-trends-an), which has no other code and was last pushed in March 2023.
+
+## Licence
+
+This repository is licensed under the MIT License, as the README has stated since November 2024. There is no LICENSE file yet.

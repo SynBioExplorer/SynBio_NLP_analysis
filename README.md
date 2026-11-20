@@ -12,7 +12,7 @@ The paper's abstract also describes a co-authorship network analysis. That analy
 
 | Path | Description |
 |---|---|
-| `New_NLP_analysis_of_synthetic_biology.ipynb` | The whole analysis: 101 cells, about 60 MB with saved outputs. GitHub reports it as too big to display, so download it and open it in Colab or Jupyter. The tables below describe its code. |
+| `New_NLP_analysis_of_synthetic_biology.ipynb` | The analysis: 101 cells, about 60 MB with saved outputs. GitHub reports it as too big to display, so download it and open it in Colab or Jupyter. The tables below describe its code. |
 | nine `.html` files | Interactive Plotly figures. GitHub does not render HTML, so download a file and open it in a browser. See [Saved outputs](#saved-outputs). |
 | `docs/figures/` | Static previews of three of the HTML figures, rendered from the tracked files with headless Chrome. |
 
@@ -56,10 +56,10 @@ Cells 38 and 39.
 | Embeddings | `all-mpnet-base-v2` through sentence-transformers |
 | UMAP | `n_neighbors=15`, `n_components=5`, `min_dist=0.0`, cosine metric, no random seed |
 | HDBSCAN | `min_cluster_size=15`, euclidean metric, `cluster_selection_method='eom'` |
-| Topic words | `CountVectorizer(ngram_range=(1, 3), stop_words="english")` and class-based TF-IDF |
+| Topic words | Cell 38 sets `CountVectorizer(ngram_range=(1, 3), stop_words="english")` and class-based TF-IDF. Cell 42 calls `update_topics` without a vectorizer, so the saved topic words come from a default `CountVectorizer`: single words, with stop words such as "the" and "was" kept. |
 | Topic number | `nr_topics=100` requested, `calculate_probabilities=True` |
 | Outliers | `reduce_outliers`, then `update_topics` (cells 41 and 42) |
-| Labels | Cell 38 sets a `MaximalMarginalRelevance` representation, then replaces it with an OpenAI `gpt-3.5-turbo` representation model that needs an API key. The topic names saved in cells 43 to 45 are keyword lists such as `0_metabolic_production_pathway_engineering`, not model-written labels. |
+| Labels | Cell 38 sets a `MaximalMarginalRelevance` representation, then replaces it with an OpenAI `gpt-3.5-turbo` representation model. Cell 42's `update_topics` call drops the representation model, so the topic names saved in cells 43 to 45 are keyword lists such as `0_metabolic_production_pathway_engineering`, not model-written labels. |
 
 ## Saved outputs
 
@@ -97,8 +97,8 @@ The notebook was not re-run when this README was written.
 
 1. Use Colab with a GPU runtime (the notebook metadata records a T4). The saved pip output shows Python 3.10, pandas 1.5.3, torch 2.0.1 and plotly 5.13.1. BERTopic, sentence-transformers, UMAP and HDBSCAN were installed without version pins, and their versions are not recorded.
 2. Put the input files listed under [Data](#data) in `MyDrive/Coding data/` on Google Drive.
-3. Supply your own credentials in place of the placeholders: `openai.api_key` in cell 38 and the Chart Studio username and key in cell 5. Do not commit them. Delete the `py.plot(...)` lines, which upload figures to Chart Studio: its public chart pages now return HTTP 410 (checked on 20 November 2026).
-4. Cell 21 replaces `file1` with the older, smaller export for the Scopus comparison, and cell 22 filters it. The saved journal outputs cover 23,237 papers, more than the 15,644 journal articles with a DOI that the older export gives (Venn diagram, cell 24), so they appear to come from the expanded query. After cell 24, reload `expanded_query.xlsx` before running the journal and country cells.
+3. Delete the last two lines of cell 38, which set an OpenAI key and model: cell 42 discards their labels, and BERTopic 0.16 and later fail on the call because they require a `client` argument. Also delete the `py.plot(...)` lines, which upload figures to Chart Studio: its public chart pages now return HTTP 410 (checked on 20 November 2026). No API keys are then needed.
+4. Cells 21 and 22 replace `file1` with the older export for the Scopus comparison, so every later cell that reads `file1` (word cloud, publications per year, journals, countries) would use it. The saved journal outputs cover 23,237 papers, more than the 15,644 journal articles with a DOI in the older export (cell 24), so they come from the expanded query. Skip cells 20 to 24, or run them last.
 
 ## Data
 
@@ -117,7 +117,7 @@ The search strings for the two exports are not recorded here. Text from the expo
 
 - **Age.** The notebook was last committed on 17 June 2023 and has not been updated since. The saved yearly series stop in 2021 (topics over time) and 2022 (publications per year), and the country plots include a partial 2023.
 - **Reproducibility.** One notebook, no environment file, no pinned versions, and inputs that are not included. It relies on Colab, Google Drive paths, an OpenAI key and Chart Studio. UMAP has no random seed, so a new run can give different topics. The notebook does not measure topic coherence or stability.
-- **Saved outputs.** They come from more than one Colab session. Cell 56 stores a `NameError`, and cell 57 reloads CSV files written earlier. The trained model (cell 46) and the topic tables (cells 47 and 56) are not in the repository.
+- **Saved outputs.** They come from more than one Colab session. Cell 56 stores a `NameError`, and cell 57 reloads CSV files written earlier. The `CustomName` column in cell 45 is offset by one topic (topic 0 reads `1 biology synthetic research`), while the figures and the topic table read in cell 57 are aligned. The trained model (cell 46) and the topic tables (cells 47 and 56) are not in the repository.
 - **Corpus.** Some of the 99 topics are only loosely related to synthetic biology.
 - **Countries.** Each address counts once, so the country figures are address counts, and a paper with authors in several countries is counted several times. City and country names are found by substring matching, so mismatches are possible.
 - **Scope.** No co-authorship network analysis (see above).
